@@ -667,7 +667,7 @@ def perform_translation(text, target_lang_name):
     # what the free translation endpoints accept in one request. Chunk it
     # so each request stays under the relevant limit.
    
- google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
+google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
     if GEMINI_KEY:
         try:
             results = []
