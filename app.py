@@ -681,7 +681,7 @@ if GEMINI_KEY:
 
 
 
-    translated_chunks = []
+translated_chunks = []
     google_error = None
     google_failed = False
 
