@@ -2,6 +2,8 @@ import hashlib
 import io
 import os
 import secrets
+import time
+import requests
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
@@ -625,6 +627,37 @@ def _translate_with_mymemory(text, mymemory_code):
         raise ValueError("MyMemory returned an unexpected response.")
     return translated
 
+def _resolve_secret(name):
+    value = os.environ.get(name)
+    if not value:
+        try:
+            value = st.secrets[name]
+        except (FileNotFoundError, KeyError):
+            value = None
+    return value
+
+
+GEMINI_KEY = _resolve_secret("GEMINI_API_KEY")
+
+
+def _translate_with_gemini(text, target_lang_name):
+    resp = requests.post(
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        "gemini-3.5-flash-lite:generateContent",
+        headers={"x-goog-api-key": GEMINI_KEY, "Content-Type": "application/json"},
+        json={
+            "contents": [{"parts": [{"text":
+                f"Translate the following text to {target_lang_name}. "
+                "Reply with ONLY the translation, nothing else:\n\n" + text
+            }]}],
+            "generationConfig": {"temperature": 0.1},
+        },
+        timeout=60,
+    )
+    resp.raise_for_status()
+    return resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+
 
 def perform_translation(text, target_lang_name):
     code = LANG_CODES.get(target_lang_name, "en")
@@ -633,7 +666,20 @@ def perform_translation(text, target_lang_name):
     # Long text (e.g. extracted from a multi-slide deck or PDF) can exceed
     # what the free translation endpoints accept in one request. Chunk it
     # so each request stays under the relevant limit.
-    google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
+   
+        google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
+    if GEMINI_KEY:
+        try:
+            results = []
+            for i, chunk in enumerate(google_chunks):
+                if i > 0:
+                    time.sleep(5)  # stay under the free-tier rate limit
+                results.append(_translate_with_gemini(chunk, target_lang_name))
+            return "\n".join(results)
+        except Exception:
+            pass  # fall back to Google, then MyMemory
+
+
 
     translated_chunks = []
     google_error = None
