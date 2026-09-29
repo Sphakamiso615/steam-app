@@ -782,6 +782,21 @@ st.markdown("""
     border-radius: 8px !important;
 }
 [data-testid="stCodeBlock"] pre, .stApp pre { color: #F5F5F5 !important; }
+/* st.code — current Streamlit test id is stCode (was stCodeBlock) */
+[data-testid="stCode"] {
+    background: #151515 !important;
+    border: 1px solid #514321 !important;
+    border-left: 3px solid #D4AF37 !important;
+    border-radius: 8px !important;
+}
+[data-testid="stCode"] pre, [data-testid="stCode"] pre code {
+    background: #151515 !important;
+    color: #F5F5F5 !important;
+}
+[data-testid="stCode"] pre code span {
+    color: #E8D48B !important;
+}
+
 [data-testid="stExpander"] .stButton > button {
     background: transparent !important;
     color: #D4AF37 !important;
