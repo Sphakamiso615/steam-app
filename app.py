@@ -668,7 +668,7 @@ def perform_translation(text, target_lang_name):
     # so each request stays under the relevant limit.
    
 google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
-    if GEMINI_KEY:
+if GEMINI_KEY:
         try:
             results = []
             for i, chunk in enumerate(google_chunks):
