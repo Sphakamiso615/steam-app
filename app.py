@@ -972,7 +972,19 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
     transition: background-color 9999s ease-out 0s;
 }
 
-[data-baseweb="input"] > div:focus-within, [data-baseweb="textarea"] > div:focus-within {
+ [data-baseweb="input"] input, [data-baseweb="textarea"] textarea {
+    background: #111 !important;
+    color: #F5F5F5 !important;
+    -webkit-text-fill-color: #F5F5F5 !important;
+    caret-color: #F5F5F5 !important;
+}
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+    -webkit-text-fill-color: #F5F5F5 !important;
+    -webkit-box-shadow: 0 0 0 1000px #111 inset !important;
+    caret-color: #F5F5F5 !important;
+    transition: background-color 9999s ease-out 0s;
+}
+
     border-color: #D4AF37 !important;
     box-shadow: 0 0 0 1px #D4AF37 !important;
 }
