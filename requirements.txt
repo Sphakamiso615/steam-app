@@ -1,0 +1,9 @@
+streamlit
+psycopg[binary,pool]
+deep-translator
+pypdf
+python-pptx
+Pillow
+pytesseract
+SpeechRecognition
+gTTS
