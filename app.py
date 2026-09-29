@@ -682,10 +682,10 @@ if GEMINI_KEY:
 
 
 translated_chunks = []
-    google_error = None
-    google_failed = False
+google_error = None
+google_failed = False
 
-    for chunk in google_chunks:
+for chunk in google_chunks:
         try:
             result = _translate_with_google(chunk, code)
             if _looks_untranslated(chunk, result, target_lang_name):
@@ -693,16 +693,15 @@ translated_chunks = []
                     "Google Translate returned the text unchanged - likely "
                     "blocked, rate-limited, or the request was too large."
                 )
-            translated_chunks.append(result)
+ translated_chunks.append(result)
         except Exception as e:
             google_error = str(e)
             google_failed = True
             break
 
-    if not google_failed:
+if not google_failed:
         return "\n".join(translated_chunks)
-
-    if mymemory_code is None:
+if mymemory_code is None:
         return (
             f"Translation error: Google Translate is currently unavailable "
             f"({google_error}), and there is no fallback translator for "
@@ -715,7 +714,7 @@ translated_chunks = []
     translated_chunks = []
     mymemory_error = None
 
-    for chunk in mymemory_chunks:
+for chunk in mymemory_chunks:
         try:
             result = _translate_with_mymemory(chunk, mymemory_code)
             if _looks_untranslated(chunk, result, target_lang_name):
@@ -726,7 +725,7 @@ translated_chunks = []
             translated_chunks = None
             break
 
-    if translated_chunks is not None:
+if translated_chunks is not None:
         return "\n".join(translated_chunks)
 
     return (
