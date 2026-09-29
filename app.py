@@ -759,7 +759,7 @@ except Exception as e:
 
 LOGO_SVG = """
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="52" height="56" viewBox="0 0 52 56"
+          width="76" height="82" viewBox="0 0 52 56"
      role="img" aria-label="STEAM APP five-node network logo">
   <circle cx="26" cy="28" r="22.8" fill="#151515" stroke="#D4AF37" stroke-width="1.4"/>
   <g fill="none" stroke="#D4AF37" stroke-width="1.3" stroke-linecap="round" opacity="0.85">
@@ -1216,18 +1216,19 @@ if not st.session_state.get("username"):
 
 # --- 4. SIDEBAR: BRANDING, ROLE, NAVIGATION, RATINGS, LOGOUT ---
 
-st.sidebar.markdown(
+ st.sidebar.markdown(
     f"""
-    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 18px">
-      {LOGO_SVG}
-      <div>
-        <div style="color:#D4AF37;font-weight:800;font-size:1.1rem">STEAM APP</div>
-        <div style="color:#bbb;font-size:.8rem">STEAM Learning · South Africa</div>
-      </div>
-    </div>
-    """,
+<div style="display:flex;align-items:center;gap:14px;padding:8px 0 18px">
+{LOGO_SVG}
+<div>
+<div style="color:#D4AF37;font-weight:800;font-size:1.1rem">STEAM APP</div>
+<div style="color:#bbb;font-size:.8rem">STEAM Learning · South Africa</div>
+</div>
+</div>
+""",
     unsafe_allow_html=True,
 )
+
 
 user_role = st.sidebar.selectbox("Select Your Role", ["Student", "Teacher"])
 
