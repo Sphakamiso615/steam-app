@@ -658,7 +658,6 @@ def _translate_with_gemini(text, target_lang_name):
     return resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
 
 
-
 def perform_translation(text, target_lang_name):
     code = LANG_CODES.get(target_lang_name, "en")
     mymemory_code = MYMEMORY_CODES.get(target_lang_name)
@@ -666,9 +665,10 @@ def perform_translation(text, target_lang_name):
     # Long text (e.g. extracted from a multi-slide deck or PDF) can exceed
     # what the free translation endpoints accept in one request. Chunk it
     # so each request stays under the relevant limit.
-   
-google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
-if GEMINI_KEY:
+    google_chunks = _split_into_chunks(text, GOOGLE_CHUNK_LIMIT)
+
+    # Primary: Gemini API (official, key-based, no shared-IP blocking).
+    if GEMINI_KEY:
         try:
             results = []
             for i, chunk in enumerate(google_chunks):
@@ -679,13 +679,12 @@ if GEMINI_KEY:
         except Exception:
             pass  # fall back to Google, then MyMemory
 
+    # Fallback 1: free Google endpoint.
+    translated_chunks = []
+    google_error = None
+    google_failed = False
 
-
-translated_chunks = []
-google_error = None
-google_failed = False
-
-for chunk in google_chunks:
+    for chunk in google_chunks:
         try:
             result = _translate_with_google(chunk, code)
             if _looks_untranslated(chunk, result, target_lang_name):
@@ -693,15 +692,16 @@ for chunk in google_chunks:
                     "Google Translate returned the text unchanged - likely "
                     "blocked, rate-limited, or the request was too large."
                 )
-        translated_chunks.append(result)
+            translated_chunks.append(result)
         except Exception as e:
             google_error = str(e)
             google_failed = True
             break
 
-if not google_failed:
+    if not google_failed:
         return "\n".join(translated_chunks)
-if mymemory_code is None:
+
+    if mymemory_code is None:
         return (
             f"Translation error: Google Translate is currently unavailable "
             f"({google_error}), and there is no fallback translator for "
@@ -709,12 +709,12 @@ if mymemory_code is None:
             "translate a shorter excerpt."
         )
 
-    # Retry from scratch with MyMemory, chunked to its much smaller limit.
+    # Fallback 2: MyMemory.
     mymemory_chunks = _split_into_chunks(text, MYMEMORY_CHUNK_LIMIT)
     translated_chunks = []
     mymemory_error = None
 
-for chunk in mymemory_chunks:
+    for chunk in mymemory_chunks:
         try:
             result = _translate_with_mymemory(chunk, mymemory_code)
             if _looks_untranslated(chunk, result, target_lang_name):
@@ -725,7 +725,7 @@ for chunk in mymemory_chunks:
             translated_chunks = None
             break
 
-if translated_chunks is not None:
+    if translated_chunks is not None:
         return "\n".join(translated_chunks)
 
     return (
@@ -734,6 +734,9 @@ if translated_chunks is not None:
         "This can happen with very long text or a slow/blocked connection - "
         "try a shorter excerpt, or check your internet connection and try again."
     )
+
+
+ 
 
 
 # --- 2. PAGE CONFIGURATION, THEME & STARTUP ---
