@@ -1215,8 +1215,7 @@ if not st.session_state.get("username"):
         st.stop()
 
 # --- 4. SIDEBAR: BRANDING, ROLE, NAVIGATION, RATINGS, LOGOUT ---
-
- st.sidebar.markdown(
+st.sidebar.markdown(
     f"""
 <div style="display:flex;align-items:center;gap:14px;padding:8px 0 18px">
 {LOGO_SVG}
