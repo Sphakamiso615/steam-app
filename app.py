@@ -693,7 +693,7 @@ for chunk in google_chunks:
                     "Google Translate returned the text unchanged - likely "
                     "blocked, rate-limited, or the request was too large."
                 )
-translated_chunks.append(result)
+        translated_chunks.append(result)
         except Exception as e:
             google_error = str(e)
             google_failed = True
