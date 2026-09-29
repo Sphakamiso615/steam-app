@@ -944,7 +944,19 @@ audio::-webkit-media-controls-panel { background-color: #151515; }
 [data-testid="stTabs"] button[role="tab"][aria-selected="true"] { color: #D4AF37 !important; border-bottom: 2px solid #D4AF37 !important; }
 [data-testid="stForm"] [data-testid="stWidgetLabel"], [data-testid="stExpander"] [data-testid="stWidgetLabel"] { color: #D4AF37 !important; }
 [data-baseweb="input"] > div, [data-baseweb="textarea"] > div { background: #111 !important; border-color: #514321 !important; }
-[data-baseweb="input"] input, [data-baseweb="textarea"] textarea { background: #111 !important; color: #F5F5F5 !important; }
+ [data-baseweb="input"] input, [data-baseweb="textarea"] textarea {
+    background: #111 !important;
+    color: #F5F5F5 !important;
+    -webkit-text-fill-color: #F5F5F5 !important;
+    caret-color: #F5F5F5 !important;
+}
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+    -webkit-text-fill-color: #F5F5F5 !important;
+    -webkit-box-shadow: 0 0 0 1000px #111 inset !important;
+    caret-color: #F5F5F5 !important;
+    transition: background-color 9999s ease-out 0s;
+}
+
 [data-baseweb="input"] > div:focus-within, [data-baseweb="textarea"] > div:focus-within {
     border-color: #D4AF37 !important;
     box-shadow: 0 0 0 1px #D4AF37 !important;
